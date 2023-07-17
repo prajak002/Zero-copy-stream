@@ -1,9 +1,9 @@
-#include "ZeroCopyNetworkReaderStream.h"
+#include "ZCReaderStream.h"
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
-ZeroCopyNetworkReaderStream::ZeroCopyNetworkReaderStream(
+ZCReaderStream::ZCReaderStream(
   int fd,
   protobuf::uint32 totalMessageSize,
   protobuf::uint8* pDataBuffer,
@@ -20,13 +20,13 @@ ZeroCopyNetworkReaderStream::ZeroCopyNetworkReaderStream(
 
 
 
-ZeroCopyNetworkReaderStream::~ZeroCopyNetworkReaderStream()
+ZCReaderStream::~ZCReaderStream()
 {
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ZeroCopyNetworkReaderStream::Next(const void** data, int* size) {
+bool ZCReaderStream::Next(const void** data, int* size) {
   if (data == 0 || size == 0) {
     return false;
   }
@@ -83,13 +83,13 @@ bool ZeroCopyNetworkReaderStream::Next(const void** data, int* size) {
 
 //--------------------------------------------------------------------------------------------------
 
-void ZeroCopyNetworkReaderStream::BackUp(int count) {
+void ZCReaderStream::BackUp(int count) {
   m_backupPos -= count;
 }
 
 //--------------------------------------------------------------------------------------------------
 
-bool ZeroCopyNetworkReaderStream::Skip(int count) {
+bool ZCReaderStream::Skip(int count) {
   if (m_backupPos < m_numBytesLastRead) {
     const protobuf::uint32 numBytesToSkipInBackup =
       std::min(m_numBytesLastRead - m_backupPos, (protobuf::uint32) count);
